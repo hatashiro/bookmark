@@ -119,25 +119,23 @@ exports.Bookmark = function (opts) {
   };
 
   function markBookmarkFromPoint(x, y) {
-    if (isInBookmarkMode) {
-      var el = document.elementFromPoint(x, y);
+    var el = document.elementFromPoint(x, y);
 
-      var bookmark = {
-        tagName: el.tagName,
-        index: [].indexOf.call(document.getElementsByTagName(el.tagName), el)
-      };
+    var bookmark = {
+      tagName: el.tagName,
+      index: [].indexOf.call(document.getElementsByTagName(el.tagName), el)
+    };
 
-      if (bookmark.tagName.toLowerCase() === 'body') {
-        return;
-      }
+    if (bookmark.tagName.toLowerCase() === 'body') {
+      return;
+    }
 
-      if (hasClass(el, opts.className)) {
-        bookmarks.splice(findBookmarkIndex(bookmark), 1);
-        removeClass(el, opts.className);
-      } else {
-        bookmarks.push(bookmark);
-        addClass(el, opts.className);
-      }
+    if (hasClass(el, opts.className)) {
+      bookmarks.splice(findBookmarkIndex(bookmark), 1);
+      removeClass(el, opts.className);
+    } else {
+      bookmarks.push(bookmark);
+      addClass(el, opts.className);
     }
 
     if (opts.useCookie) {
@@ -147,7 +145,9 @@ exports.Bookmark = function (opts) {
   }
 
   window.onclick = function (e) {
-    markBookmarkFromPoint(event.clientX, event.clientY);
+    if (isInBookmarkMode) {
+      markBookmarkFromPoint(event.clientX, event.clientY);
+    }
   };
 
   var treatAsClick = false;
@@ -160,7 +160,7 @@ exports.Bookmark = function (opts) {
     treatAsClick = false;
   };
   window.ontouchend = function (e) {
-    if (treatAsClick) {
+    if (isInBookmarkMode && treatAsClick) {
       markBookmarkFromPoint(touch.clientX, touch.clientY);
       treatAsClick = false;
     }
