@@ -15,13 +15,71 @@
     <button id='activate-btn'>Activate Bookmark!</button>
     <button id='navigate-btn'>Find Next Bookmark!</button>
     <a href='https://github.com/noraesae/bookmark'>Source</a>
+    <a href='https://raw.githubusercontent.com/noraesae/bookmark/master/src/bookmark.js'>Download</a>
   </div>
   <div id='content'>
     <h1 class='logo'>Bookmark</h1>
     <h1>A simple bookmark script for me and you.</h1>
 
     <h1 class='title'>What's this?</h1>
-    <p>When you read a documentation online, it sometimes is too long to read up at once.</p>
+    <p>When you read any document, it sometimes is too long to read up at once.</p>
+    <p>If it's a traditional book, you can use a bookmark.</p>
+    <p>But I always wanted a bookmark for documents online.</p>
+    <p>That's it, <a href='http://noraesae.github.io/bookmark'>Bookmark</a>.</p>
+
+    <h1 class='title'>How to use?</h1>
+    <p>First, we need to activate Bookmark.</p>
+    <p>Please click the `Activate Bookmark!` button.</p>
+    <p>After Bookmark is activated, you can bookmark an element when clicking it.</p>
+    <p>For sure, you can un-bookmark it when clicking it again.</p>
+    <p>It remains even though you <a href='/'>refresh</a> the page.</p>
+    <p>When clicking the `Finding Next Bookmark!` button, you can navigate through the bookmarks.</p>
+
+    <h1 class='title'>How does it work?</h1>
+    <ul>
+      <li><p>It just capture the <code>click</code> or <code>touch</code> event in window.</p></li>
+      <li><p>Find the element with <code>elementFromPoint</code>.</p></li>
+      <li><p>Save the tag name and index of the element into a list.</p></li>
+      <li><p>Save the list into cookie(you can configure this part).</p></li>
+    </ul>
+
+    <h1 class='title' id='doc'>Documentation</h1>
+    <p>First, just include the script.</p>
+    <pre><code>&lt;script src='/js/bookmark.js'&gt;&lt;/script&gt;</code></pre>
+    <p>Use the <code>Bookmark</code> class like a boss.</p>
+    <pre><code>var bookmark = new Bookmark();</code></pre>
+    <p>Activate it.</p>
+    <pre><code>bookmark.activate();</code></pre>
+    <p>Deactivate it.</p>
+    <pre><code>bookmark.deactivate();</code></pre>
+    <p>Navigate through the bookmarked element.</p>
+    <pre><code>bookmark.navigate();</code></pre>
+    <p>Want some options?</p>
+    <ul>
+      <li><p><code>className</code>: the name of class added when bookmarked.</p></li>
+      <li><p><code>useCookie</code>: You can turn off the cookie and handle data by yourself.</p></li>
+      <li><p><code>cookieName</code>: If the name of cookie conflicts? Change it.</p></li>
+    </ul>
+    <pre style='text-align: left; width: 500px; margin: 0px auto;'><code>var bookmark = new Bookmark({
+  className: 'bookmarked',
+  useCookie: true,
+  cookieName: 'bookmarks'
+});</code></pre>
+    <p>You can handle update event of Bookmark.</p>
+    <pre><code>bookmark.update(handlerFunction);</code></pre>
+    <p>The handler function will be like below:</p>
+    <pre><code>var handlerFunction = function (bookmarks) { ... };</code></pre>
+    <p><code>bookmarks</code> object will like below:</p>
+    <pre style='text-align: left; width: 500px; margin: 0px auto;'><code>[
+  {tagName: 'p', index: 3},
+  {tagName: 'li', index: 10},
+  ...
+]</code></pre>
+    <p>You can save it where you want, and then just load again.</p>
+    <pre><code>bookmark.updateBookmarks(bookmarks);</code></pre>
+
+    <h1 class='title'>License</h1>
+    <p>Copyright (c) 2014 Hyeonje Alex Jun and other contributors<br>Licensed under the MIT License</p>
   </div>
 
   <script src='/js/bookmark.js'></script>

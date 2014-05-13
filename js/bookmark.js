@@ -118,32 +118,52 @@ exports.Bookmark = function (opts) {
     isInBookmarkMode = false;
   };
 
-  window.onclick = function (e) {
-    if (isInBookmarkMode) {
-      var el = document.elementFromPoint(event.clientX, event.clientY);
+  function markBookmarkFromPoint(x, y) {
+    var el = document.elementFromPoint(x, y);
 
-      var bookmark = {
-        tagName: el.tagName,
-        index: [].indexOf.call(document.getElementsByTagName(el.tagName), el)
-      };
+    var bookmark = {
+      tagName: el.tagName,
+      index: [].indexOf.call(document.getElementsByTagName(el.tagName), el)
+    };
 
-      if (bookmark.tagName.toLowerCase() === 'body') {
-        return;
-      }
+    if (bookmark.tagName.toLowerCase() === 'body') {
+      return;
+    }
 
-      if (hasClass(el, opts.className)) {
-        bookmarks.splice(findBookmarkIndex(bookmark), 1);
-        removeClass(el, opts.className);
-      } else {
-        bookmarks.push(bookmark);
-        addClass(el, opts.className);
-      }
+    if (hasClass(el, opts.className)) {
+      bookmarks.splice(findBookmarkIndex(bookmark), 1);
+      removeClass(el, opts.className);
+    } else {
+      bookmarks.push(bookmark);
+      addClass(el, opts.className);
     }
 
     if (opts.useCookie) {
       updateBookmarksToCookie();
     }
     callBookmarkUpdateHandler();
+  }
+
+  window.onclick = function (e) {
+    if (isInBookmarkMode) {
+      markBookmarkFromPoint(event.clientX, event.clientY);
+    }
+  };
+
+  var treatAsClick = false;
+  var touch = null;
+  window.ontouchstart = function (e) {
+    treatAsClick = true;
+    touch = e.targetTouches[0];
+  };
+  window.ontouchmove = function (e) {
+    treatAsClick = false;
+  };
+  window.ontouchend = function (e) {
+    if (isInBookmarkMode && treatAsClick) {
+      markBookmarkFromPoint(touch.clientX, touch.clientY);
+      treatAsClick = false;
+    }
   };
 
   self.navigate = function () {
