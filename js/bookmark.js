@@ -127,6 +127,10 @@ exports.Bookmark = function (opts) {
         index: [].indexOf.call(document.getElementsByTagName(el.tagName), el)
       };
 
+      if (bookmark.tagName.toLowerCase() === 'body') {
+        return;
+      }
+
       if (hasClass(el, opts.className)) {
         bookmarks.splice(findBookmarkIndex(bookmark), 1);
         removeClass(el, opts.className);
