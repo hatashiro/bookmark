@@ -118,9 +118,9 @@ exports.Bookmark = function (opts) {
     isInBookmarkMode = false;
   };
 
-  window.onclick = function (e) {
+  function markBookmarkFromPoint(x, y) {
     if (isInBookmarkMode) {
-      var el = document.elementFromPoint(event.clientX, event.clientY);
+      var el = document.elementFromPoint(x, y);
 
       var bookmark = {
         tagName: el.tagName,
@@ -144,6 +144,26 @@ exports.Bookmark = function (opts) {
       updateBookmarksToCookie();
     }
     callBookmarkUpdateHandler();
+  }
+
+  window.onclick = function (e) {
+    markBookmarkFromPoint(event.clientX, event.clientY);
+  };
+
+  var treatAsClick = false;
+  var touch = null;
+  window.ontouchstart = function (e) {
+    treatAsClick = true;
+    touch = e.targetTouches[0];
+  };
+  window.ontouchmove = function (e) {
+    treatAsClick = false;
+  };
+  window.ontouchend = function (e) {
+    if (treatAsClick) {
+      markBookmarkFromPoint(touch.clientX, touch.clientY);
+      treatAsClick = false;
+    }
   };
 
   self.navigate = function () {
